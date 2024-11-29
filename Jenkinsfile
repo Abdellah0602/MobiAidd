@@ -6,6 +6,8 @@ pipeline {
             steps {
                 echo 'Installing dependencies...'
                 dir('nestjs-mongodb-crud') {
+                    sh 'node -v'
+                    sh 'npm -v'
                     sh 'npm install'
                 }
             }
