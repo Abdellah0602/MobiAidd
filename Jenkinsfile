@@ -1,38 +1,37 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16'  // Choisir une image Docker qui contient Node.js et npm
+            label 'docker'   // Si tu veux spécifier un label particulier pour l'agent
+            args '-v /tmp:/tmp'  // Si tu veux monter des volumes
+        }
+    }
 
     stages {
-        stage('Install Node.js & npm') {
-            steps {
-                script {
-                    // Installer Node.js (version 16 par exemple)
-                    sh 'curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -'
-                    sh 'sudo apt-get install -y nodejs'
-                }
-            }
-        }
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
-                sh 'npm install'  // Installe les dépendances après l'installation de Node.js
+                script {
+                    echo 'Installing dependencies...'
+                    sh 'npm install'  // Installer les dépendances
+                }
             }
         }
         stage('Run Tests') {
             steps {
                 echo 'Running tests...'
-                sh 'npm test'  // Si tu as des tests à exécuter
+                sh 'npm test'  // Exécuter des tests
             }
         }
         stage('Build Application') {
             steps {
                 echo 'Building application...'
-                sh 'npm run build'  // Si tu as un script de build
+                sh 'npm run build'  // Construire l'application
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
-                // Ajoute ta logique de déploiement ici
+                // Ajouter la logique de déploiement ici
             }
         }
     }
