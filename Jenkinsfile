@@ -1,31 +1,55 @@
 pipeline {
-
+    agent any
     stages {
+        stage('Checkout') {
+            steps {
+                // Récupère le code depuis le dépôt Git
+                checkout scm
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 script {
-                    echo 'Installing dependencies...'
-                    sh 'npm install'  // Installer les dépendances
+                    // Installer les dépendances avec npm ou yarn
+                    sh 'npm install'
                 }
             }
         }
         stage('Run Tests') {
             steps {
-                echo 'Running tests...'
-                sh 'npm test'  // Exécuter des tests
+                script {
+                    // Lancer les tests unitaires
+                    sh 'npm run test'
+                }
             }
         }
-        stage('Build Application') {
+        stage('Build') {
             steps {
-                echo 'Building application...'
-                sh 'npm run build'  // Construire l'application
+                script {
+                    // Compiler le projet
+                    sh 'npm run build'
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
-                // Ajouter la logique de déploiement ici
+                script {
+                    // Exemple de déploiement : copie des fichiers vers un serveur distant
+                    sh '''
+                    scp -r ./dist/* user@remote-server:/var/www/nestjs-app/
+                    '''
+                }
             }
+        }
+    }
+    post {
+        always {
+            // Notifier si l'exécution réussit ou échoue
+            echo "Pipeline terminé"
+        }
+        failure {
+            // Action en cas d'échec
+            echo "Pipeline échoué"
         }
     }
 }
