@@ -2,57 +2,38 @@ pipeline {
     agent any
 
     stages {
+        stage('Install Node.js & npm') {
+            steps {
+                script {
+                    // Installer Node.js (version 16 par exemple)
+                    sh 'curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -'
+                    sh 'sudo apt-get install -y nodejs'
+                }
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                dir('nestjs-mongodb-crud') {
-                    sh 'node -v'
-                    sh 'npm -v'
-                    sh 'npm install'
-                }
+                sh 'npm install'  // Installe les dépendances après l'installation de Node.js
             }
         }
-
         stage('Run Tests') {
             steps {
                 echo 'Running tests...'
-                dir('nestjs-mongodb-crud') {
-                    sh 'npm run test'
-                }
+                sh 'npm test'  // Si tu as des tests à exécuter
             }
         }
-
         stage('Build Application') {
             steps {
-                echo 'Building the application...'
-                dir('nestjs-mongodb-crud') {
-                    sh 'npm run build'
-                }
+                echo 'Building application...'
+                sh 'npm run build'  // Si tu as un script de build
             }
         }
-
         stage('Deploy') {
-            when {
-                branch 'main'
-            }
             steps {
                 echo 'Deploying application...'
-                dir('nestjs-mongodb-crud') {
-                    // Ajoute ici tes commandes de déploiement
-                }
+                // Ajoute ta logique de déploiement ici
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline finished.'
-        }
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
