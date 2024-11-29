@@ -1,11 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:16'  // Choisir une image Docker qui contient Node.js et npm
-            label 'docker'   // Si tu veux spécifier un label particulier pour l'agent
-            args '-v /tmp:/tmp'  // Si tu veux monter des volumes
-        }
-    }
+    agent { label 'docker-agent' }  // Utiliser un agent avec un label spécifique
 
     stages {
         stage('Install Dependencies') {
