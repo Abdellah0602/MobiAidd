@@ -1,5 +1,4 @@
 pipeline {
-    agent { label 'docker-agent' }  // Utiliser un agent avec un label spécifique
 
     stages {
         stage('Install Dependencies') {
